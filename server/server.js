@@ -537,14 +537,10 @@ function onWebSocketRequest(ws, req) {
         }
       });
       if (hadLink) return;
-      const linkFileExtension = config.keepFileExtension 
-      ? fileExtRegexp.test(msg.data.location) 
-        ? fileExtRegexp.exec(msg.data.location)[1]
-        : '' 
-      : '';
-      const link = utils.getLink(links, config.linkLength, linkFileExtension);
+      const linkFileExtension = config.keepFileExtension ?
+        fileExtRegexp.test(msg.data.location) ? fileExtRegexp.exec(msg.data.location)[1] : "" : "";
 
-      //const link = utils.getLink(links, config.linkLength);
+      const link = utils.getLink(links, config.linkLength, linkFileExtension);
       log.info(ws, null, "Share link created: " + link + " -> " + msg.data.location);
       sendObj(sid, {type: "SHARELINK", vId: vId, link: link, attachement: msg.data.attachement});
       links[link] = {location: msg.data.location, attachement: msg.data.attachement};
@@ -1054,7 +1050,7 @@ function handleFileRequest(req, res, download) {
   let shareLink, filepath;
   // (?:\.\w{1,5})? checks for the possibility of a file extension in public link
   // Todo: The extension detection like min and max size should be customizable in the config file
-  const linkRe = new RegExp("^/\\??\\$/([" + utils.linkChars + "]{" + config.linkLength + "}(?:\\.\\w{1,5})?)$");  
+  const linkRe = new RegExp("^/\\??\\$/([" + utils.linkChars + "]{" + config.linkLength + "}(?:\\.\\w{1,5})?)$");
 
   let parts = linkRe.exec(URI);
   if (parts && parts[1]) { // check for sharelink

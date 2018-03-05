@@ -96,7 +96,7 @@ utils.copyDir = function(src, dst, cb) {
 utils.linkChars = "abcdefghjkmnpqrstuvwxyz23456789";
 
 // Get a pseudo-random n-character lowercase string.
-utils.getLink = function(links, length, linkFileExtension = '') {
+utils.getLink = function(links, length, linkFileExtension = "") {
   let link = "";
   do {
     while (link.length < length) {
