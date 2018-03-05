@@ -39,6 +39,7 @@ let firstRun        = null;
 let Wss             = null;
 let uwsLogged       = false;
 let ready           = false;
+const fileExtRegexp = /\/.+(\.\w+)$/;
 
 module.exports = function droppy(opts, isStandalone, dev, callback) {
   if (isStandalone) {
@@ -536,8 +537,14 @@ function onWebSocketRequest(ws, req) {
         }
       });
       if (hadLink) return;
+      const linkFileExtension = config.keepFileExtension 
+      ? fileExtRegexp.test(msg.data.location) 
+        ? fileExtRegexp.exec(msg.data.location)[1]
+        : '' 
+      : '';
+      const link = utils.getLink(links, config.linkLength, linkFileExtension);
 
-      const link = utils.getLink(links, config.linkLength);
+      //const link = utils.getLink(links, config.linkLength);
       log.info(ws, null, "Share link created: " + link + " -> " + msg.data.location);
       sendObj(sid, {type: "SHARELINK", vId: vId, link: link, attachement: msg.data.attachement});
       links[link] = {location: msg.data.location, attachement: msg.data.attachement};
@@ -853,7 +860,6 @@ function handleGET(req, res) {
 const rateLimited = [];
 function handlePOST(req, res) {
   const URI = decodeURIComponent(req.url);
-
   // unauthenticated POSTs
   if (/^\/!\/login/.test(URI)) {
     res.setHeader("Content-Type", "text/plain");
@@ -1046,7 +1052,9 @@ function handleResourceRequest(req, res, resourceName) {
 function handleFileRequest(req, res, download) {
   const URI = decodeURIComponent(req.url);
   let shareLink, filepath;
-  const linkRe = new RegExp("^/\\??\\$/([" + utils.linkChars + "]{" + config.linkLength + "})$");
+  // (?:\.\w{1,5})? checks for the possibility of a file extension in public link
+  // Todo: The extension detection like min and max size should be customizable in the config file
+  const linkRe = new RegExp("^/\\??\\$/([" + utils.linkChars + "]{" + config.linkLength + "}(?:\\.\\w{1,5})?)$");  
 
   let parts = linkRe.exec(URI);
   if (parts && parts[1]) { // check for sharelink

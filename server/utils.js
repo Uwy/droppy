@@ -96,12 +96,13 @@ utils.copyDir = function(src, dst, cb) {
 utils.linkChars = "abcdefghjkmnpqrstuvwxyz23456789";
 
 // Get a pseudo-random n-character lowercase string.
-utils.getLink = function(links, length) {
+utils.getLink = function(links, length, linkFileExtension = '') {
   let link = "";
   do {
     while (link.length < length) {
       link += utils.linkChars.charAt(Math.floor(Math.random() * utils.linkChars.length));
     }
+    link += linkFileExtension;
   } while (links[link]); // In case the RNG generates an existing link, go again
 
   return link;

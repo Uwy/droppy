@@ -15,19 +15,20 @@ const defaults = {
       protocol : "http"
     }
   ],
-  public          : false,
-  timestamps      : true,
-  linkLength      : 5,
-  logLevel        : 2,
-  maxFileSize     : 0,
-  updateInterval  : 1000,
-  pollingInterval : 0,
-  keepAlive       : 20000,
-  allowFrame      : false,
-  readOnly        : false,
-  compression     : true,
-  ignorePatterns  : [],
-  watch           : true,
+  public            : false,
+  timestamps        : true,
+  linkLength        : 5,
+  logLevel          : 2,
+  maxFileSize       : 0,
+  updateInterval    : 1000,
+  pollingInterval   : 0,
+  keepAlive         : 20000,
+  allowFrame        : false,
+  readOnly          : false,
+  compression       : true,
+  ignorePatterns    : [],
+  watch             : true,
+  keepFileExtension : false,
 };
 
 const hiddenOpts = ["dev", "demo"];
